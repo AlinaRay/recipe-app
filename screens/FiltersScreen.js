@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, Switch, Platform} from 'react-native';
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
+import {useDispatch} from 'react-redux';
 import HeaderButton from '../components/HeaderButton';
-
+import {setFilters} from '../store/actions/meals';
 import Colors from '../constans/Colors';
 
 const FilterSwitch = props => {
@@ -25,6 +26,7 @@ const FiltersScreen = props => {
     const [isLactoseFree, setIsLactoseFree] = useState(false);
     const [isVegan, setIsVegan] = useState(false);
     const [isVegetarian, setIsVegetarian] = useState(false);
+    const dispatch = useDispatch();
 
     //use useCallback for avoiding the infinite loop of rebuilding
     const saveFilters = useCallback(() => {
@@ -34,8 +36,9 @@ const FiltersScreen = props => {
             vegan: isVegan,
             vegetarian: isVegetarian,
         };
-        console.log(appliedFilters);
-    }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
+
+        dispatch(setFilters(appliedFilters));
+    }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian, dispatch]);
 
     useEffect(() => {
        navigation.setParams({save: saveFilters}) // setParams() CAUSES THE COMPONENT
